@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import desc
+from flask_login import UserMixin
 
 from booking import db
 

@@ -1,5 +1,6 @@
 from flask import render_template, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
+#from flask_login import login_required
 
 from booking import app, db
 from booking.models import Room, Booking, User
@@ -25,9 +26,25 @@ def delete(roomnumber):
     db.session.commit()
     return render_template('index.html', rooms=Room.getall())
 
-@app.route('/room', methods=['GET', 'POST'])
-def room():
-    return render_template('room.html')
+@app.route('/room/<roomnumber>', methods=['GET', 'POST'])
+def room(roomnumber):
+    if request.method == "POST":
+        room = Room.query.filter_by(number=roomnumber).first()
+        date = request.form['date']
+        start_time = request.form['from']
+        end_time = request.form['to']
+        roomnumber = roomnumber
+        booking = Booking(date=date, start_time=start_time, end_time=end_time, room= room)
+        db.session.add(booking)
+        db.session.commit()
+    return render_template('room.html', room=Room.query.filter_by(number=roomnumber).first(), bookings=Booking.getroombooking(roomnumber))
+
+@app.route('/remove/<roomnumber>/<bookingid>', methods=['GET', 'POST'])
+def remove(roomnumber, bookingid):
+    booking = Booking.query.filter_by(id=bookingid).first_or_404()
+    db.session.delete(booking)
+    db.session.commit()
+    return render_template('room.html', room=Room.query.filter_by(number=roomnumber).first(), bookings=Booking.getroombooking(roomnumber))
 
 @app.errorhandler(404)
 def page_not_found(e):

@@ -55,9 +55,9 @@
 
             <div class="card mt-4">
                 <div class="card-body">
-                <h3 class="card-title">Room Number</h3>
+                <h3 class="card-title">Room Number: {{ room.number }}</h3>
                 <h4>Description</h4>
-                <p class="card-text">Lorem ipsum</p>
+                <p class="card-text">{{ room.description }}</p>
                 </div>
             </div>
             <!-- /.card -->
@@ -92,13 +92,11 @@
                 Current Bookings
                 </div>
                 <div class="card-body">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+                {% for booking in bookings%}
+                <p>On {{ booking.date }} the room has been booked from {{ booking.start_time }} to {{ booking.end_time }}</p>
                 <small class="text-muted">Booked by Anonymous on 3/1/17</small>
-                <button class="btn btn-danger"> Remove booking </button>                
-                <hr>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-                <small class="text-muted">Booked by Anonymous on 3/1/17</small>
-                <button class="btn btn-danger"> Remove booking </button>
+                <button class="btn btn-danger" href={{ url_for('remove', roomnumber=room.number, bookingid=booking.id)}}> Remove booking </button>
+                {% endfor %}
                 <hr>
                 <a href="#" class="btn btn-success" data-toggle="modal" data-target="#formModal">Add a booking</a>
                 </div>
